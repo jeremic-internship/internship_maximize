@@ -11,15 +11,21 @@
 #include <vector>
 #include <cstdio>
 #include <algorithm>
+#include <cstdlib>
 
 using namespace std;
 
-int main () {
+int main( int argc, char *argv[] ) {
 	// ofstream dataFile;
 	// dataFile.open ("data.dat");
 	// dataFile << "Writing this to a file.\n";
 	// dataFile.close();
 	// return 0;
+
+	if (argc < 2) {
+		cout << "This program takes one argument, the maximum weight...\n";
+		return 666;
+	}
 
 
 	std::ifstream t("data.dat");
@@ -51,7 +57,7 @@ int main () {
 
 	std::sort(dataVector.begin(), dataVector.end(), [](const std::vector< int >& a, const std::vector< int >& b){ return a[1] > b[1]; } ); //If you want to sort in ascending order, then substitute > with <.
 
-	int weightMax = 9; // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
+	int weightMax = atoi(argv[1]); // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
 	int currentWeight = 0;
 	int currentValue = 0;
 	string weightSubset = "";
