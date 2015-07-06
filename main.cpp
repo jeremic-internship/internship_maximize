@@ -12,8 +12,37 @@
 #include <cstdio>
 #include <algorithm>
 #include <cstdlib>
+#include <numeric>
 
 using namespace std;
+
+vector< vector<int> > dataVector;
+vector<int> combination;
+vector<int> combinationValue;
+vector<int> maxValueSeenList;
+vector<int> weightList;
+int weightMax;
+int maxValueSeen = 0;
+
+void go(int offset, int k) {
+  if (k == 0) {
+  	if (std::accumulate(combination.begin(),combination.end(),0) < weightMax) {
+  		if (accumulate(combinationValue.begin(),combinationValue.end(),0) > maxValueSeen) {
+  			maxValueSeen = accumulate(combinationValue.begin(),combinationValue.end(),0);
+  			maxValueSeenList = combinationValue;
+  			weightList = combination;
+  		}
+  	}
+    return;
+  }
+  for (int i = offset; i <= dataVector.size() - k; ++i) {
+    combination.push_back(dataVector[i][0]);
+    combinationValue.push_back(dataVector[i][1]);
+    go(i+1, k-1);
+    combination.pop_back();
+    combinationValue.pop_back();
+  }
+}
 
 int main( int argc, char *argv[] ) {
 	// ofstream dataFile;
@@ -35,8 +64,6 @@ int main( int argc, char *argv[] ) {
 
 	int i = 0;
 	stringstream ssin(fileText);
-
-	vector< vector<int> > dataVector;
 	
 	while (ssin.good()) {
 		string tmp;
@@ -57,39 +84,37 @@ int main( int argc, char *argv[] ) {
 
 	std::sort(dataVector.begin(), dataVector.end(), [](const std::vector< int >& a, const std::vector< int >& b){ return a[1] > b[1]; } ); //If you want to sort in ascending order, then substitute > with <.
 
-	int weightMax = atoi(argv[1]); // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
-	int currentWeight = 0;
-	int currentValue = 0;
-	string weightSubset = "";
-	string valueSubset = "";
+	weightMax = atoi(argv[1]); // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
 
-	for( int i=0; i<dataVector.size(); ++i) {
-		if (currentWeight + dataVector[i][0] < weightMax) {
-			currentWeight = currentWeight + dataVector[i][0];
-			currentValue = currentValue + dataVector[i][1];
-
-			int tmpWeight = dataVector[i][0];
-			int tmpValue = dataVector[i][1];
-
-			if (i != 0) {
-				weightSubset.append(", ");
-				valueSubset.append(", ");
-			}	
-
-			weightSubset.append(to_string(tmpWeight));
-			valueSubset.append(to_string(tmpValue));
-		}
+	for (int z = 1; z <= dataVector.size(); z++) {
+		go(0, z);
 	}
-
-	weightSubset.append(" -> ");
-	valueSubset.append(" -> ");
-	weightSubset.append(to_string(currentWeight));
-	valueSubset.append(to_string(currentValue));
-
-	cout << weightSubset << "\n" << valueSubset << "\n";
 
 	ofstream outfile;
 	outfile.open ("subset.res");
-	outfile << weightSubset << "\n" << valueSubset << "\n";
+
+	for (int i = 0; i < weightList.size(); i++) {
+		if (i != 0) {
+			outfile << ", ";
+		}
+		outfile << weightList[i];
+	}
+
+	outfile << " -> " + to_string(accumulate(weightList.begin(),weightList.end(),0));
+	
+	outfile << "\n";
+
+	for (int i = 0; i < maxValueSeenList.size(); i++) {
+		if (i != 0) {
+			outfile << ", ";
+		}
+		outfile << maxValueSeenList[i];
+	}
+
+	outfile << " -> " + to_string(accumulate(maxValueSeenList.begin(),maxValueSeenList.end(),0));
+	
+	outfile << "\n";
+	
 	outfile.close();
+
 }
