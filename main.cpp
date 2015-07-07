@@ -1,15 +1,6 @@
-#include <iostream>
 #include <fstream>
-#include <string>
-#include <streambuf>
 #include <sstream>
-#include <stdlib.h>
-#include <math.h>
-#include <vector>
-#include <cstdio>
 #include <algorithm>
-#include <cstdlib>
-#include <numeric>
 
 using namespace std;
 
