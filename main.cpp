@@ -1,6 +1,3 @@
-// Made in 2 hours and 13 minutes.
-// Deal with it.
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -45,17 +42,6 @@ void go(int offset, int k) {
 }
 
 int main( int argc, char *argv[] ) {
-	// ofstream dataFile;
-	// dataFile.open ("data.dat");
-	// dataFile << "Writing this to a file.\n";
-	// dataFile.close();
-	// return 0;
-
-	if (argc < 2) {
-		cout << "This program takes one argument, the maximum weight...\n";
-		return 666;
-	}
-
 
 	std::ifstream t("data.dat");
 	std::string fileText((std::istreambuf_iterator<char>(t)),
@@ -80,11 +66,9 @@ int main( int argc, char *argv[] ) {
 		++i;
 	}
 
-	// At this point, dataVector contains the dataset in the form of a multidimensional vector.
+	weightMax = dataVector.back()[0]; // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
+	dataVector.erase(dataVector.end() - 1);
 
-	std::sort(dataVector.begin(), dataVector.end(), [](const std::vector< int >& a, const std::vector< int >& b){ return a[1] > b[1]; } ); //If you want to sort in ascending order, then substitute > with <.
-
-	weightMax = atoi(argv[1]); // /!\ READ THIS!!!!!!! The total weight will be LESS THAN this, as specified in the instructions.  Thus, Max is not a good name, but deal with it.
 
 	for (int z = 1; z <= dataVector.size(); z++) {
 		go(0, z);
